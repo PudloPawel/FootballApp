@@ -3,7 +3,7 @@ package com.example.footbalapp.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
+import java.util.*;
 import javax.persistence.*;
 
 @NoArgsConstructor
@@ -33,12 +33,20 @@ public class PlayersEntity {
     @Column(name = "NUMBER")
     private Long numberPlayer;
 
+    @ManyToMany(mappedBy = "players")
+    private List<TeamsEntity> team = new ArrayList<>();
+
+
     public PlayersEntity(String name, String surname, String dateOfBirth, String position, Long numberPlayer) {
         this.name = name;
         this.surname = surname;
         this.dateOfBirth = dateOfBirth;
         this.position = position;
         this.numberPlayer = numberPlayer;
+    }
+
+    public void addTeam(TeamsEntity teamsEntity){
+        team.add(teamsEntity);
     }
 }
 

@@ -3,8 +3,6 @@ package com.example.footbalapp.mapper;
 import com.example.footbalapp.dto.PlayerDto;
 import com.example.footbalapp.entity.PlayersEntity;
 import com.example.footbalapp.repository.PlayersRepository;
-import com.example.footbalapp.repository.PlayersTeamRepository;
-import com.example.footbalapp.repository.TeamsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +23,8 @@ public class PlayersTeamMapper {
         List<PlayerDto> playerDtoList = new ArrayList<>();
 
         try{
+
+            /*
             List<PlayersEntity> playersEntities = this.playersRepository.getPlayersTeam(idTeam);
 
             for(PlayersEntity player:playersEntities) {
@@ -35,12 +35,12 @@ public class PlayersTeamMapper {
                         player.getPosition(),
                         player.getNumberPlayer()));
             }
+
+             */
             return playerDtoList;
         }catch (Exception var4){
             return playerDtoList;
         }
-
-
 
 
     }
