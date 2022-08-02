@@ -1,8 +1,12 @@
 package com.example.footbalapp.mapper;
 
 import com.example.footbalapp.dto.PlayerDto;
+import com.example.footbalapp.dto.functionDto.AddPlayerDto;
+import com.example.footbalapp.dto.status.Status;
 import com.example.footbalapp.entity.PlayersEntity;
 import com.example.footbalapp.repository.PlayersRepository;
+import com.example.footbalapp.repository.TeamsRepository;
+import com.example.footbalapp.util.CheckingRegularExpresion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,36 +16,93 @@ import java.util.*;
 public class PlayersTeamMapper {
 
     private PlayersRepository playersRepository;
+    private TeamsRepository teamsRepository;
 
     @Autowired
-    public PlayersTeamMapper(PlayersRepository playersRepository) {
+    public PlayersTeamMapper(PlayersRepository playersRepository, TeamsRepository teamsRepository) {
         this.playersRepository = playersRepository;
+        this.teamsRepository = teamsRepository;
     }
 
-    public List<PlayerDto> getPlayersOfTeam(Long idTeam){
+
+    public List<PlayerDto> getPlayersOfTeam(Long idTeam) {
 
         List<PlayerDto> playerDtoList = new ArrayList<>();
 
-        try{
+        try {
 
-            /*
-            List<PlayersEntity> playersEntities = this.playersRepository.getPlayersTeam(idTeam);
 
-            for(PlayersEntity player:playersEntities) {
-                playerDtoList.add(new PlayerDto(player.getIdPlayer(),
-                        player.getName(),
-                        player.getSurname(),
-                        player.getDateOfBirth(),
-                        player.getPosition(),
-                        player.getNumberPlayer()));
-            }
-
-             */
             return playerDtoList;
-        }catch (Exception var4){
+        } catch (Exception var4) {
             return playerDtoList;
         }
 
 
     }
+
+    public AddPlayerDto addPlayer(PlayerDto playerDto) {
+        try {
+            String name = playerDto.getName();
+            String surname = playerDto.getSurname();
+            String dateOfBirth = playerDto.getDateOfBirth();
+            String position = playerDto.getPosition();
+
+            CheckingRegularExpresion checkingRegularExpresion = new CheckingRegularExpresion();
+
+            if(checkingRegularExpresion.checkStringForNumbers(name)
+                    || checkingRegularExpresion.checkStringForNumbers(surname)
+                    || checkingRegularExpresion.checkStringForNumbers(position)){
+                return AddPlayerDto
+                        .builder()
+                        .playerDto(new PlayerDto())
+                        .status(Status.Validation.FAILED)
+                        .message("Number found in word")
+                        .build();
+            }
+
+            if(!checkingRegularExpresion.checkStringDate(dateOfBirth)){
+                return AddPlayerDto
+                        .builder()
+                        .playerDto(new PlayerDto())
+                        .status(Status.Validation.FAILED)
+                        .message("Bad key in date: try set type date: 27-04-1992")
+                        .build();
+            }
+
+            PlayersEntity playerEntity = new PlayersEntity(name,surname,dateOfBirth,position);
+
+            for (PlayersEntity playersEntity : this.playersRepository.findAll()) {
+                if (playersEntity.equals(playerEntity)) return AddPlayerDto
+                        .builder()
+                        .playerDto(new PlayerDto())
+                        .status(Status.Validation.FAILED)
+                        .message("This player already exists")
+                        .build();
+            }
+
+            this.playersRepository.save(playerEntity);
+
+            return AddPlayerDto
+                    .builder()
+                    .playerDto(playerDto)
+                    .status(Status.Validation.SUCCESSFUL)
+                    .message("You add player")
+                    .build();
+
+        } catch (Exception var4) {
+            return AddPlayerDto
+                    .builder()
+                    .playerDto(new PlayerDto())
+                    .status(Status.Validation.FAILED)
+                    .message(var4.getMessage())
+                    .build();
+        }
+
+        /*
+            Sprawdz czy dany gosc istnieje w bazie (Wszystko podobne)
+            Zablokuj niedozwolone znaki
+         */
+
+    }
+
 }

@@ -25,11 +25,10 @@ public class TeamsEntity {
     @Column(name = "NAME_CATEGORY_ENG")
     private String nameCategoryENG;
 
-    @ManyToMany
-    @JoinTable(
-            name = "playersOfTeam",
-            joinColumns = @JoinColumn(name = "ID_TEAM"),
-            inverseJoinColumns = @JoinColumn(name = "ID_PLAYER")
+    @OneToMany(
+            mappedBy = "idPlayer",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
     )
     private List<PlayersEntity> players = new ArrayList<>();
 
@@ -38,8 +37,8 @@ public class TeamsEntity {
         this.nameCategoryENG = nameCategoryENG;
     }
 
-    public void addPlayerForTeam(PlayersEntity playersEntity){
-        players.add(playersEntity);
+    public void setPlayers(List<PlayersEntity> players) {
+        this.players = players;
     }
 
 }
