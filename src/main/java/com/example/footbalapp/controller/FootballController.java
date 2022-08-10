@@ -2,6 +2,7 @@ package com.example.footbalapp.controller;
 
 import com.example.footbalapp.dto.PlayerDto;
 import com.example.footbalapp.dto.functionDto.AddPlayerDto;
+import com.example.footbalapp.dto.status.Status;
 import com.example.footbalapp.service.FootballService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,8 +32,15 @@ public class FootballController {
     @CrossOrigin("http://localhost:63342")
     @GetMapping("/addPlayer")
     public ResponseEntity<AddPlayerDto> addPlayer(@RequestBody PlayerDto playerDto){
-            // DOdaj zmiane statusu
-        return new ResponseEntity<>(footballService.addPlayer(playerDto),HttpStatus.OK);
+            AddPlayerDto addPlayerDto = footballService.addPlayer(playerDto);
+
+            if(addPlayerDto.getStatus().equals(Status.Validation.SUCCESSFUL)){
+                return new ResponseEntity<>(addPlayerDto,HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>(addPlayerDto,HttpStatus.BAD_REQUEST);
+            }
+
+
     }
 
 

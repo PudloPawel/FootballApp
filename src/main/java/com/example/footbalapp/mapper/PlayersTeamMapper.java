@@ -37,6 +37,7 @@ public class PlayersTeamMapper {
 
     }
 
+    // Function for add data player in DataBase
     public AddPlayerDto addPlayer(PlayerDto playerDto) {
         try {
             String name = playerDto.getName();
