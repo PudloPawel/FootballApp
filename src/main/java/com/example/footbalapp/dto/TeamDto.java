@@ -11,15 +11,11 @@ import lombok.Setter;
 @Builder
 public class TeamDto {
 
-    private Long idTeam;
-    private String nameTeam;
+    private String nameTeamPl;
+    private String nameTeamEng;
 
-    public TeamDto(Long idTeam, String nameTeam) {
-        this.idTeam = idTeam;
-        this.nameTeam = nameTeam;
-    }
-
-    public TeamDto(String nameTeam) {
-        this.nameTeam = nameTeam;
+    public TeamDto(String nameTeamPl, String nameTeamEng) {
+        this.nameTeamPl = nameTeamPl;
+        this.nameTeamEng = nameTeamEng;
     }
 }

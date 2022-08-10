@@ -41,4 +41,18 @@ public class TeamsEntity {
         this.players = players;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj instanceof TeamsEntity) {
+            TeamsEntity otherTeam = (TeamsEntity) obj;
+
+            return nameCategoryPl.equals(otherTeam.nameCategoryPl)
+                    || nameCategoryENG.equals(otherTeam.nameCategoryENG);
+        }
+        return false;
+    }
+
 }
