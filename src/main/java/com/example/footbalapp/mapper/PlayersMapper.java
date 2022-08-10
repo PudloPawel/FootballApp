@@ -13,28 +13,13 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 
 @Component
-public class PlayersTeamMapper {
+public class PlayersMapper {
 
-    private PlayersRepository playersRepository;
+    private final PlayersRepository playersRepository;
 
     @Autowired
-    public PlayersTeamMapper(PlayersRepository playersRepository) {
+    public PlayersMapper(PlayersRepository playersRepository) {
         this.playersRepository = playersRepository;
-    }
-
-    public List<PlayerDto> getPlayersOfTeam(Long idTeam) {
-
-        List<PlayerDto> playerDtoList = new ArrayList<>();
-
-        try {
-
-
-            return playerDtoList;
-        } catch (Exception var4) {
-            return playerDtoList;
-        }
-
-
     }
 
     // Function for add data player in DataBase
