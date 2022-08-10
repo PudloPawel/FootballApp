@@ -1,9 +1,10 @@
 package com.example.footbalapp.entity;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
+import java.util.*;
 import javax.persistence.*;
 
 @NoArgsConstructor
@@ -11,7 +12,7 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Table(name = "PLAYERS")
-public class PlayersEntity {
+public class PlayersEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,15 +31,38 @@ public class PlayersEntity {
     @Column(name = "POSITION")
     private String position;
 
-    @Column(name = "NUMBER")
-    private Long numberPlayer;
+    @OneToMany(
+            mappedBy = "idTeam",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<TeamsEntity> teams = new ArrayList<>();
 
-    public PlayersEntity(String name, String surname, String dateOfBirth, String position, Long numberPlayer) {
+    public PlayersEntity(String name, String surname, String dateOfBirth, String position) {
         this.name = name;
         this.surname = surname;
         this.dateOfBirth = dateOfBirth;
         this.position = position;
-        this.numberPlayer = numberPlayer;
     }
+
+    public void setTeams(List<TeamsEntity> teams) {
+        this.teams = teams;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj instanceof PlayersEntity) {
+            PlayersEntity otherPlayer = (PlayersEntity) obj;
+            return name.equals(otherPlayer.name) &&
+                    surname.equals(otherPlayer.surname) &&
+                    dateOfBirth.equals(otherPlayer.dateOfBirth) &&
+                    position.equals(otherPlayer.position);
+        }
+        return false;
+    }
+
 }
 

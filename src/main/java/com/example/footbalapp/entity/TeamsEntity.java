@@ -3,8 +3,9 @@ package com.example.footbalapp.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
+import java.util.*;
 import javax.persistence.*;
+
 
 @NoArgsConstructor
 @Getter
@@ -24,8 +25,20 @@ public class TeamsEntity {
     @Column(name = "NAME_CATEGORY_ENG")
     private String nameCategoryENG;
 
+    @OneToMany(
+            mappedBy = "idPlayer",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<PlayersEntity> players = new ArrayList<>();
+
     public TeamsEntity(String nameCategoryPl, String nameCategoryENG) {
         this.nameCategoryPl = nameCategoryPl;
         this.nameCategoryENG = nameCategoryENG;
     }
+
+    public void setPlayers(List<PlayersEntity> players) {
+        this.players = players;
+    }
+
 }
