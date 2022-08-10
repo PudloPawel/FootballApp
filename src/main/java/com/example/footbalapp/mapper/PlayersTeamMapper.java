@@ -16,14 +16,11 @@ import java.util.*;
 public class PlayersTeamMapper {
 
     private PlayersRepository playersRepository;
-    private TeamsRepository teamsRepository;
 
     @Autowired
-    public PlayersTeamMapper(PlayersRepository playersRepository, TeamsRepository teamsRepository) {
+    public PlayersTeamMapper(PlayersRepository playersRepository) {
         this.playersRepository = playersRepository;
-        this.teamsRepository = teamsRepository;
     }
-
 
     public List<PlayerDto> getPlayersOfTeam(Long idTeam) {
 
@@ -54,7 +51,6 @@ public class PlayersTeamMapper {
                     || checkingRegularExpresion.checkStringForNumbers(position)){
                 return AddPlayerDto
                         .builder()
-                        .playerDto(new PlayerDto())
                         .status(Status.Validation.FAILED)
                         .message("Number found in word")
                         .build();
@@ -63,7 +59,6 @@ public class PlayersTeamMapper {
             if(!checkingRegularExpresion.checkStringDate(dateOfBirth)){
                 return AddPlayerDto
                         .builder()
-                        .playerDto(new PlayerDto())
                         .status(Status.Validation.FAILED)
                         .message("Bad key in date: try set type date: 27-04-1992")
                         .build();
@@ -74,7 +69,6 @@ public class PlayersTeamMapper {
             for (PlayersEntity playersEntity : this.playersRepository.findAll()) {
                 if (playersEntity.equals(playerEntity)) return AddPlayerDto
                         .builder()
-                        .playerDto(new PlayerDto())
                         .status(Status.Validation.FAILED)
                         .message("This player already exists")
                         .build();
@@ -92,16 +86,10 @@ public class PlayersTeamMapper {
         } catch (Exception var4) {
             return AddPlayerDto
                     .builder()
-                    .playerDto(new PlayerDto())
                     .status(Status.Validation.FAILED)
                     .message(var4.getMessage())
                     .build();
         }
-
-        /*
-            Sprawdz czy dany gosc istnieje w bazie (Wszystko podobne)
-            Zablokuj niedozwolone znaki
-         */
 
     }
 

@@ -33,7 +33,6 @@ public class CheckingRegularExpresion {
             if(word.charAt(2)!= '-' || word.charAt(5) != '-') return false;
                 for (char sign : word.toLowerCase().toCharArray()) {
                     if (sign != '-') {
-                        System.out.println(sign);
                         if (!String.valueOf(sign).matches("\\d")) return false;
                     }
                 }
