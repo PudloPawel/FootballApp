@@ -47,7 +47,6 @@ public class Start {
         playerOne.setPlayer(player1);
         playerOne.setTeam(seniorzy);
 
-        this.playerOfTeamRepository.save(playerOne);
 
 
 
