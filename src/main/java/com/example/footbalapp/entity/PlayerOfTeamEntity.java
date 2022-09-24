@@ -34,4 +34,18 @@ public class PlayerOfTeamEntity {
     public void setTeam(TeamsEntity teamsEntity) {
         this.teamsEntity = teamsEntity;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj instanceof PlayerOfTeamEntity) {
+            PlayerOfTeamEntity playersOfTeam = (PlayerOfTeamEntity) obj;
+            return playersEntity.getIdPlayer().equals(playersOfTeam.getPlayersEntity()) &&
+                    teamsEntity.getIdTeam().equals(playersOfTeam.getTeamsEntity());
+        }
+        return false;
+    }
+
 }
