@@ -1,96 +1,97 @@
 package com.example.footbalapp.mapper;
 
-import com.example.footbalapp.dto.PlayerDto;
-import com.example.footbalapp.dto.functionDto.AddPlayerDto;
+import com.example.footbalapp.dto.PlayerForTeamDto;
+import com.example.footbalapp.dto.functionDto.AddPlayerForTeamDto;
 import com.example.footbalapp.dto.status.Status;
+import com.example.footbalapp.entity.PlayerOfTeamEntity;
 import com.example.footbalapp.entity.PlayersEntity;
+import com.example.footbalapp.entity.TeamsEntity;
+import com.example.footbalapp.repository.PlayerOfTeamRepository;
 import com.example.footbalapp.repository.PlayersRepository;
 import com.example.footbalapp.repository.TeamsRepository;
-import com.example.footbalapp.util.CheckingRegularExpresion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.*;
 
 @Component
 public class PlayersTeamMapper {
 
-    private PlayersRepository playersRepository;
+    private final PlayersRepository playersRepository;
+    private final TeamsRepository teamsRepository;
+    private final PlayerOfTeamRepository playerOfTeamRepository;
 
     @Autowired
-    public PlayersTeamMapper(PlayersRepository playersRepository) {
+    public PlayersTeamMapper(PlayersRepository playersRepository,
+                             TeamsRepository teamsRepository,
+                             PlayerOfTeamRepository playerOfTeamRepository) {
         this.playersRepository = playersRepository;
+        this.teamsRepository = teamsRepository;
+        this.playerOfTeamRepository = playerOfTeamRepository;
     }
 
-    public List<PlayerDto> getPlayersOfTeam(Long idTeam) {
 
-        List<PlayerDto> playerDtoList = new ArrayList<>();
+    public AddPlayerForTeamDto addPlayerForTeam(PlayerForTeamDto playerForTeamDto){
 
-        try {
+        Long idPlayer = playerForTeamDto.getIdPlayer();
+        Long idTeam = playerForTeamDto.getIdTeam();
+
+        try{
+
+            PlayersEntity playersEntity = this.playersRepository.findPlayer(idPlayer);
+            TeamsEntity teamEntity = this.teamsRepository.findTeam(idTeam);
 
 
-            return playerDtoList;
-        } catch (Exception var4) {
-            return playerDtoList;
-        }
-
-
-    }
-
-    public AddPlayerDto addPlayer(PlayerDto playerDto) {
-        try {
-            String name = playerDto.getName();
-            String surname = playerDto.getSurname();
-            String dateOfBirth = playerDto.getDateOfBirth();
-            String position = playerDto.getPosition();
-
-            CheckingRegularExpresion checkingRegularExpresion = new CheckingRegularExpresion();
-
-            if(checkingRegularExpresion.checkStringForNumbers(name)
-                    || checkingRegularExpresion.checkStringForNumbers(surname)
-                    || checkingRegularExpresion.checkStringForNumbers(position)){
-                return AddPlayerDto
+            if(playersEntity == null && teamEntity == null){
+                return AddPlayerForTeamDto
                         .builder()
                         .status(Status.Validation.FAILED)
-                        .message("Number found in word")
+                        .message(String.format("Not found player with id: %s and Not found team with id: %s",idPlayer,idTeam))
                         .build();
-            }
-
-            if(!checkingRegularExpresion.checkStringDate(dateOfBirth)){
-                return AddPlayerDto
+            }else if(playersEntity == null){
+                return AddPlayerForTeamDto
                         .builder()
                         .status(Status.Validation.FAILED)
-                        .message("Bad key in date: try set type date: 27-04-1992")
+                        .message(String.format("Not found team with id: %s",idTeam))
                         .build();
-            }
-
-            PlayersEntity playerEntity = new PlayersEntity(name,surname,dateOfBirth,position);
-
-            for (PlayersEntity playersEntity : this.playersRepository.findAll()) {
-                if (playersEntity.equals(playerEntity)) return AddPlayerDto
+            }else if(teamEntity == null){
+                return AddPlayerForTeamDto
                         .builder()
                         .status(Status.Validation.FAILED)
-                        .message("This player already exists")
+                        .message(String.format("Not found player with id: %s",idPlayer))
                         .build();
             }
+            PlayerOfTeamEntity playerOfTeamEntity = new PlayerOfTeamEntity();
 
-            this.playersRepository.save(playerEntity);
+            try{
+                PlayerOfTeamEntity checkNullEntity = playerOfTeamRepository.findPlayerInTeam(idPlayer,idTeam);
+                checkNullEntity.equals(checkNullEntity);
+                return AddPlayerForTeamDto
+                        .builder()
+                        .status(Status.Validation.FAILED)
+                        .message(String.format("Player id: %s is exist in team id: %s",idPlayer,idTeam))
+                        .build();
+            }catch (Exception ignored){}
 
-            return AddPlayerDto
+            playerOfTeamEntity.setPlayer(playersEntity);
+            playerOfTeamEntity.setTeam(teamEntity);
+            this.playerOfTeamRepository.save(playerOfTeamEntity);
+            return AddPlayerForTeamDto
                     .builder()
-                    .playerDto(playerDto)
+                    .playerForTeamDto(playerForTeamDto)
                     .status(Status.Validation.SUCCESSFUL)
-                    .message("You add player")
+                    .message(String.format("You add Player %s id: %s for Team: %s id: %s"
+                            ,playersEntity.getName()
+                            ,playersEntity.getIdPlayer().toString()
+                            ,teamEntity.getNameCategoryENG()
+                            ,teamEntity.getIdTeam().toString()))
                     .build();
 
-        } catch (Exception var4) {
-            return AddPlayerDto
+        }catch (Exception var4){
+            return AddPlayerForTeamDto
                     .builder()
                     .status(Status.Validation.FAILED)
                     .message(var4.getMessage())
                     .build();
         }
-
     }
 
 }
