@@ -3,10 +3,7 @@ package com.example.footbalapp.controller;
 import com.example.footbalapp.dto.PlayerDto;
 import com.example.footbalapp.dto.PlayerForTeamDto;
 import com.example.footbalapp.dto.TeamDto;
-import com.example.footbalapp.dto.functionDto.AddPlayerDto;
-import com.example.footbalapp.dto.functionDto.AddPlayerForTeamDto;
-import com.example.footbalapp.dto.functionDto.AddTeamDto;
-import com.example.footbalapp.dto.functionDto.GetPlayersOfTeam;
+import com.example.footbalapp.dto.functionDto.*;
 import com.example.footbalapp.dto.status.Status;
 import com.example.footbalapp.service.FootballService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,12 +36,21 @@ public class FootballController {
         }else{
             return new ResponseEntity<>(getPlayersOfTeam,HttpStatus.BAD_REQUEST);
         }
-
-
-
     }
 
+    @CrossOrigin("http://localhost:63342")
+    @GetMapping("/getPlayer")
+    public ResponseEntity<GetPlayerInformation> getPlayerOfTeam(@RequestBody PlayerForTeamDto playerForTeamDto){
 
+        GetPlayerInformation getPlayerOfTeam = footballService.getPlayerOfTeam(playerForTeamDto);
+
+        if(getPlayerOfTeam.getStatus().equals(Status.Validation.SUCCESSFUL)){
+            return new ResponseEntity<>(getPlayerOfTeam, HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(getPlayerOfTeam,HttpStatus.BAD_REQUEST);
+        }
+
+    }
 
     @CrossOrigin("http://localhost:63342")
     @PostMapping("/addPlayer")
