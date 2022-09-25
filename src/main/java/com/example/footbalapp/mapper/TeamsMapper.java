@@ -4,6 +4,7 @@ import com.example.footbalapp.dto.PlayerDto;
 import com.example.footbalapp.dto.TeamDto;
 import com.example.footbalapp.dto.functionDto.AddPlayerDto;
 import com.example.footbalapp.dto.functionDto.AddTeamDto;
+import com.example.footbalapp.dto.functionDto.GetPlayersOfTeam;
 import com.example.footbalapp.dto.status.Status;
 import com.example.footbalapp.entity.PlayersEntity;
 import com.example.footbalapp.entity.TeamsEntity;
@@ -11,6 +12,8 @@ import com.example.footbalapp.repository.TeamsRepository;
 import com.example.footbalapp.util.CheckingRegularExpresion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class TeamsMapper {
@@ -57,5 +60,6 @@ public class TeamsMapper {
         }
 
     }
+
 
 }

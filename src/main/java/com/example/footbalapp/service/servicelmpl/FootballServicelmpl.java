@@ -6,6 +6,7 @@ import com.example.footbalapp.dto.TeamDto;
 import com.example.footbalapp.dto.functionDto.AddPlayerDto;
 import com.example.footbalapp.dto.functionDto.AddPlayerForTeamDto;
 import com.example.footbalapp.dto.functionDto.AddTeamDto;
+import com.example.footbalapp.dto.functionDto.GetPlayersOfTeam;
 import com.example.footbalapp.mapper.PlayersMapper;
 import com.example.footbalapp.mapper.PlayersTeamMapper;
 import com.example.footbalapp.mapper.TeamsMapper;
@@ -29,9 +30,8 @@ public class FootballServicelmpl implements FootballService {
     }
 
     @Override
-    public List<PlayerDto> getPlayersOfTeam(Long idTeam) {
-       // return this.playersTeamMapper.getPlayersOfTeam(idTeam);
-        return null;
+    public GetPlayersOfTeam getPlayersOfTeam(Long idTeam) {
+        return this.playersTeamMapper.getPlayersOfTeam(idTeam);
     }
 
     @Override

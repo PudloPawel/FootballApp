@@ -6,6 +6,7 @@ import com.example.footbalapp.dto.TeamDto;
 import com.example.footbalapp.dto.functionDto.AddPlayerDto;
 import com.example.footbalapp.dto.functionDto.AddPlayerForTeamDto;
 import com.example.footbalapp.dto.functionDto.AddTeamDto;
+import com.example.footbalapp.dto.functionDto.GetPlayersOfTeam;
 import com.example.footbalapp.dto.status.Status;
 import com.example.footbalapp.service.FootballService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.*;
 
 @Controller
 @RequestMapping("/api")
@@ -24,14 +27,24 @@ public class FootballController {
     public FootballController(FootballService footballService) {
         this.footballService = footballService;
     }
-    /*
+
     @CrossOrigin("http://localhost:63342")
     @GetMapping("/getPlayers/{idTeam}")
-    public ResponseEntity<List<PlayerDto>> getPlayersOfTeam(@PathVariable(value = "idTeam") Long idTeam){
-        return new ResponseEntity<>(footballService.getPlayersOfTeam(idTeam), HttpStatus.OK);
+    public ResponseEntity<GetPlayersOfTeam> getPlayersOfTeam(@PathVariable(value = "idTeam") Long idTeam){
+
+        GetPlayersOfTeam getPlayersOfTeam = footballService.getPlayersOfTeam(idTeam);
+
+        if(getPlayersOfTeam.getStatus().equals(Status.Validation.SUCCESSFUL)){
+            return new ResponseEntity<>(getPlayersOfTeam, HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(getPlayersOfTeam,HttpStatus.BAD_REQUEST);
+        }
+
+
+
     }
 
-     */
+
 
     @CrossOrigin("http://localhost:63342")
     @PostMapping("/addPlayer")
@@ -72,7 +85,5 @@ public class FootballController {
         }
 
     }
-
-
 
 }

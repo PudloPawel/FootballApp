@@ -1,7 +1,9 @@
 package com.example.footbalapp.mapper;
 
+import com.example.footbalapp.dto.PlayerDto;
 import com.example.footbalapp.dto.PlayerForTeamDto;
 import com.example.footbalapp.dto.functionDto.AddPlayerForTeamDto;
+import com.example.footbalapp.dto.functionDto.GetPlayersOfTeam;
 import com.example.footbalapp.dto.status.Status;
 import com.example.footbalapp.entity.PlayerOfTeamEntity;
 import com.example.footbalapp.entity.PlayersEntity;
@@ -11,6 +13,9 @@ import com.example.footbalapp.repository.PlayersRepository;
 import com.example.footbalapp.repository.TeamsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class PlayersTeamMapper {
@@ -27,7 +32,6 @@ public class PlayersTeamMapper {
         this.teamsRepository = teamsRepository;
         this.playerOfTeamRepository = playerOfTeamRepository;
     }
-
 
     public AddPlayerForTeamDto addPlayerForTeam(PlayerForTeamDto playerForTeamDto){
 
@@ -94,4 +98,55 @@ public class PlayersTeamMapper {
         }
     }
 
+    public GetPlayersOfTeam getPlayersOfTeam(Long idTeam) {
+        try{
+
+            List<PlayerDto> playersOfTeamDto = new ArrayList();
+
+            List<PlayersEntity> playersIdList = playerOfTeamRepository.getAllPlayerOfTeam(idTeam);
+
+            if(playersIdList == null){
+                return GetPlayersOfTeam
+                        .builder()
+                        .status(Status.Validation.FAILED)
+                        .message(String.format("Don't find player in Team id: %s or Team does not exist",idTeam))
+                        .build();
+            }
+
+
+
+            for (PlayersEntity player: playersIdList) {
+                playersOfTeamDto.add(PlayerDto
+                        .builder()
+                        .name(player.getName())
+                        .surname(player.getSurname())
+                        .dateOfBirth(player.getDateOfBirth())
+                        .position(player.getPosition())
+                .build());
+            }
+
+            if(playersOfTeamDto.size() == 0){
+                return GetPlayersOfTeam
+                        .builder()
+                        .status(Status.Validation.FAILED)
+                        .message(String.format("Don't find player in Team id: %s",idTeam))
+                        .build();
+            }else{
+                return GetPlayersOfTeam
+                        .builder()
+                        .playerOfTeamDto(playersOfTeamDto)
+                        .status(Status.Validation.SUCCESSFUL)
+                        .message(String.format("You get Players of Team id: %s",idTeam))
+                        .build();
+            }
+
+
+        }catch (Exception var4){
+            return GetPlayersOfTeam
+                    .builder()
+                    .status(Status.Validation.FAILED)
+                    .message(var4.getMessage())
+                    .build();
+        }
+    }
 }

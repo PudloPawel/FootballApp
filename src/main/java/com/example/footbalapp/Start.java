@@ -31,21 +31,27 @@ public class Start {
         TeamsEntity seniorzy = new TeamsEntity("Seniorzy","Seniors");
 
         PlayersEntity player1 = new PlayersEntity("Jan","Kowalski","27-04-1992","BR");
+        PlayersEntity player2 = new PlayersEntity("Adam","Kropka","11-07-1999","N");
 
         List<TeamsEntity> teams = new ArrayList<>();
         List<PlayersEntity> players = new ArrayList<>();
 
 
         player1.setTeams(teams);
+        player2.setTeams(teams);
         seniorzy.setPlayers(players);
 
         this.playersRepository.save(player1);
+        this.playersRepository.save(player2);
         this.teamsRepository.save(seniorzy);
 
         PlayerOfTeamEntity playerOne = new PlayerOfTeamEntity();
+        PlayerOfTeamEntity playerTwo = new PlayerOfTeamEntity();
 
         playerOne.setPlayer(player1);
+        playerTwo.setPlayer(player2);
         playerOne.setTeam(seniorzy);
+        playerTwo.setTeam(seniorzy);
 
 
 

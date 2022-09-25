@@ -6,12 +6,13 @@ import com.example.footbalapp.dto.TeamDto;
 import com.example.footbalapp.dto.functionDto.AddPlayerDto;
 import com.example.footbalapp.dto.functionDto.AddPlayerForTeamDto;
 import com.example.footbalapp.dto.functionDto.AddTeamDto;
+import com.example.footbalapp.dto.functionDto.GetPlayersOfTeam;
 
 import java.util.*;
 
 public interface FootballService {
 
-    List<PlayerDto> getPlayersOfTeam(Long idTeam);
+    GetPlayersOfTeam getPlayersOfTeam(Long idTeam);
 
     AddPlayerDto addPlayer(PlayerDto playerDto);
 
