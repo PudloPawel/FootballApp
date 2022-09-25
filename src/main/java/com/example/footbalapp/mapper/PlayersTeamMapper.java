@@ -2,7 +2,9 @@ package com.example.footbalapp.mapper;
 
 import com.example.footbalapp.dto.PlayerDto;
 import com.example.footbalapp.dto.PlayerForTeamDto;
+import com.example.footbalapp.dto.TeamDto;
 import com.example.footbalapp.dto.functionDto.AddPlayerForTeamDto;
+import com.example.footbalapp.dto.functionDto.GetPlayerInformation;
 import com.example.footbalapp.dto.functionDto.GetPlayersOfTeam;
 import com.example.footbalapp.dto.status.Status;
 import com.example.footbalapp.entity.PlayerOfTeamEntity;
@@ -149,4 +151,56 @@ public class PlayersTeamMapper {
                     .build();
         }
     }
+
+    public GetPlayerInformation getInformationPlayerOfTeam(PlayerForTeamDto playerForTeamDto){
+        try{
+
+            PlayerDto playerInformation;
+            TeamDto teamInformation;
+
+            Long idPlayer = playerForTeamDto.getIdPlayer();
+            Long idTeam = playerForTeamDto.getIdTeam();
+
+
+            PlayerOfTeamEntity playerOfTeamEntity = playerOfTeamRepository.findPlayerInTeam(idPlayer,idTeam);
+
+            if(playerOfTeamEntity == null){
+                return GetPlayerInformation
+                        .builder()
+                        .status(Status.Validation.FAILED)
+                        .message(String.format("Player id: %s or Team id: %s does not exist ",idPlayer,idTeam))
+                        .build();
+            }else{
+                playerInformation = PlayerDto
+                        .builder()
+                        .name(playerOfTeamEntity.getPlayersEntity().getName())
+                        .surname(playerOfTeamEntity.getPlayersEntity().getSurname())
+                        .dateOfBirth(playerOfTeamEntity.getPlayersEntity().getDateOfBirth())
+                        .position(playerOfTeamEntity.getPlayersEntity().getPosition())
+                        .build() ;
+                teamInformation = TeamDto
+                        .builder()
+                        .nameTeamPl(playerOfTeamEntity.getTeamsEntity().getNameCategoryPl())
+                        .nameTeamEng(playerOfTeamEntity.getTeamsEntity().getNameCategoryENG())
+                        .build();
+
+                return GetPlayerInformation
+                        .builder()
+                        .playerInformation(playerInformation)
+                        .teamInformation(teamInformation)
+                        .status(Status.Validation.SUCCESSFUL)
+                        .message(String.format("Get information about player id: %s of Team id: %s ",idPlayer,idTeam))
+                        .build();
+            }
+
+
+        }catch (Exception var4){
+            return GetPlayerInformation
+                    .builder()
+                    .status(Status.Validation.FAILED)
+                    .message(var4.getMessage())
+                    .build();
+        }
+    }
+
 }
