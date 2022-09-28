@@ -5,10 +5,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface TeamsRepository extends CrudRepository<TeamsEntity,Long> {
 
     @Query("SELECT t FROM TeamsEntity as t" +
             " WHERE t.idTeam =:idTeam ")
     TeamsEntity findTeam(Long idTeam);
+
+    @Query("SELECT t FROM TeamsEntity as t")
+    List<TeamsEntity> findTeams();
 }

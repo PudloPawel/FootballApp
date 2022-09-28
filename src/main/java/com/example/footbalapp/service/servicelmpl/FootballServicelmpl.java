@@ -50,4 +50,9 @@ public class FootballServicelmpl implements FootballService {
     public AddPlayerForTeamDto addPlayerForTeam(PlayerForTeamDto playerForTeamDto) {
         return this.playersTeamMapper.addPlayerForTeam(playerForTeamDto);
     }
+
+    @Override
+    public TeamsDto getTeams() {
+        return this.teamsMapper.getTeams();
+    }
 }
