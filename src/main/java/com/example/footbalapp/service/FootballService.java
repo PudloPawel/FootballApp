@@ -19,4 +19,6 @@ public interface FootballService {
 
     AddPlayerForTeamDto addPlayerForTeam(PlayerForTeamDto playerForTeamDto);
 
+    TeamsDto getTeams();
+
 }

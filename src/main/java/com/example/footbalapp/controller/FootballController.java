@@ -49,6 +49,19 @@ public class FootballController {
         }else{
             return new ResponseEntity<>(getPlayerOfTeam,HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @CrossOrigin("http://localhost:63342")
+    @GetMapping("/getTeams")
+    public ResponseEntity<TeamsDto> getTeams(){
+
+        TeamsDto getTeams = footballService.getTeams();
+
+        if(getTeams.getStatus().equals(Status.Validation.SUCCESSFUL)){
+            return new ResponseEntity<>(getTeams,HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(getTeams,HttpStatus.BAD_REQUEST);
+        }
 
     }
 

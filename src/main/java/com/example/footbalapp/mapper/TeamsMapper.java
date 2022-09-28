@@ -1,19 +1,16 @@
 package com.example.footbalapp.mapper;
 
-import com.example.footbalapp.dto.PlayerDto;
 import com.example.footbalapp.dto.TeamDto;
-import com.example.footbalapp.dto.functionDto.AddPlayerDto;
 import com.example.footbalapp.dto.functionDto.AddTeamDto;
-import com.example.footbalapp.dto.functionDto.GetPlayersOfTeam;
+import com.example.footbalapp.dto.functionDto.TeamsDto;
 import com.example.footbalapp.dto.status.Status;
-import com.example.footbalapp.entity.PlayersEntity;
 import com.example.footbalapp.entity.TeamsEntity;
 import com.example.footbalapp.repository.TeamsRepository;
-import com.example.footbalapp.util.CheckingRegularExpresion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.ArrayList;
 
 @Component
 public class TeamsMapper {
@@ -62,4 +59,43 @@ public class TeamsMapper {
     }
 
 
+    public TeamsDto getTeams() {
+
+        try{
+
+            List<TeamsEntity> teamsListEntity = this.teamsRepository.findTeams();
+            List<TeamDto> teamsList = new ArrayList();
+
+            for (TeamsEntity teams:teamsListEntity) {
+                teamsList.add(TeamDto
+                        .builder()
+                        .nameTeamPl(teams.getNameCategoryPl())
+                        .nameTeamEng(teams.getNameCategoryENG())
+                        .build());
+            }
+
+            if(teamsListEntity.size() <= 0 || teamsListEntity == null){
+                return TeamsDto
+                        .builder()
+                        .status(Status.Validation.FAILED)
+                        .message(String.format("Not found Teams"))
+                        .build();
+            }else{
+                return TeamsDto
+                        .builder()
+                        .teams(teamsList)
+                        .status(Status.Validation.SUCCESSFUL)
+                        .message(String.format("Found Teams"))
+                        .build();
+            }
+
+        }catch (Exception var4){
+            return TeamsDto
+                    .builder()
+                    .status(Status.Validation.FAILED)
+                    .message(var4.getMessage())
+                    .build();
+        }
+
+    }
 }
