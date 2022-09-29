@@ -3,7 +3,7 @@ package com.example.footbalapp.mapper;
 import com.example.footbalapp.dto.PlayerDto;
 import com.example.footbalapp.dto.PlayerForTeamDto;
 import com.example.footbalapp.dto.TeamDto;
-import com.example.footbalapp.dto.functionDto.AddPlayerForTeamDto;
+import com.example.footbalapp.dto.functionDto.ChangePlayerInTheTeamDto;
 import com.example.footbalapp.dto.functionDto.GetPlayerInformation;
 import com.example.footbalapp.dto.functionDto.GetPlayersOfTeam;
 import com.example.footbalapp.dto.status.Status;
@@ -35,7 +35,7 @@ public class PlayersTeamMapper {
         this.playerOfTeamRepository = playerOfTeamRepository;
     }
 
-    public AddPlayerForTeamDto addPlayerForTeam(PlayerForTeamDto playerForTeamDto){
+    public ChangePlayerInTheTeamDto addPlayerForTeam(PlayerForTeamDto playerForTeamDto){
 
         Long idPlayer = playerForTeamDto.getIdPlayer();
         Long idTeam = playerForTeamDto.getIdTeam();
@@ -47,19 +47,19 @@ public class PlayersTeamMapper {
 
 
             if(playersEntity == null && teamEntity == null){
-                return AddPlayerForTeamDto
+                return ChangePlayerInTheTeamDto
                         .builder()
                         .status(Status.Validation.FAILED)
                         .message(String.format("Not found player with id: %s and Not found team with id: %s",idPlayer,idTeam))
                         .build();
             }else if(playersEntity == null){
-                return AddPlayerForTeamDto
+                return ChangePlayerInTheTeamDto
                         .builder()
                         .status(Status.Validation.FAILED)
                         .message(String.format("Not found team with id: %s",idTeam))
                         .build();
             }else if(teamEntity == null){
-                return AddPlayerForTeamDto
+                return ChangePlayerInTheTeamDto
                         .builder()
                         .status(Status.Validation.FAILED)
                         .message(String.format("Not found player with id: %s",idPlayer))
@@ -70,7 +70,7 @@ public class PlayersTeamMapper {
             try{
                 PlayerOfTeamEntity checkNullEntity = playerOfTeamRepository.findPlayerInTeam(idPlayer,idTeam);
                 checkNullEntity.equals(checkNullEntity);
-                return AddPlayerForTeamDto
+                return ChangePlayerInTheTeamDto
                         .builder()
                         .status(Status.Validation.FAILED)
                         .message(String.format("Player id: %s is exist in team id: %s",idPlayer,idTeam))
@@ -80,7 +80,7 @@ public class PlayersTeamMapper {
             playerOfTeamEntity.setPlayer(playersEntity);
             playerOfTeamEntity.setTeam(teamEntity);
             this.playerOfTeamRepository.save(playerOfTeamEntity);
-            return AddPlayerForTeamDto
+            return ChangePlayerInTheTeamDto
                     .builder()
                     .playerForTeamDto(playerForTeamDto)
                     .status(Status.Validation.SUCCESSFUL)
@@ -92,7 +92,7 @@ public class PlayersTeamMapper {
                     .build();
 
         }catch (Exception var4){
-            return AddPlayerForTeamDto
+            return ChangePlayerInTheTeamDto
                     .builder()
                     .status(Status.Validation.FAILED)
                     .message(var4.getMessage())
@@ -203,4 +203,58 @@ public class PlayersTeamMapper {
         }
     }
 
+    public ChangePlayerInTheTeamDto deletePlayerOfTeam(PlayerForTeamDto playerForTeamDto) {
+
+        Long idPlayer = playerForTeamDto.getIdPlayer();
+        Long idTeam = playerForTeamDto.getIdTeam();
+
+        try{
+
+            PlayersEntity playersEntity = this.playersRepository.findPlayer(idPlayer);
+            TeamsEntity teamEntity = this.teamsRepository.findTeam(idTeam);
+
+
+            if(playersEntity == null && teamEntity == null){
+                return ChangePlayerInTheTeamDto
+                        .builder()
+                        .status(Status.Validation.FAILED)
+                        .message(String.format("Not found player with id: %s and Not found team with id: %s",idPlayer,idTeam))
+                        .build();
+            }else if(playersEntity == null){
+                return ChangePlayerInTheTeamDto
+                        .builder()
+                        .status(Status.Validation.FAILED)
+                        .message(String.format("Not found team with id: %s",idTeam))
+                        .build();
+            }else if(teamEntity == null){
+                return ChangePlayerInTheTeamDto
+                        .builder()
+                        .status(Status.Validation.FAILED)
+                        .message(String.format("Not found player with id: %s",idPlayer))
+                        .build();
+            }
+
+            PlayerOfTeamEntity playerOfTeamEntity = this.playerOfTeamRepository.findPlayerInTeam(idPlayer,idTeam);
+
+            this.playerOfTeamRepository.delete(playerOfTeamEntity);
+
+            return ChangePlayerInTheTeamDto
+                    .builder()
+                    .playerForTeamDto(playerForTeamDto)
+                    .status(Status.Validation.SUCCESSFUL)
+                    .message(String.format("You delete Player %s id: %s for Team: %s id: %s"
+                            ,playersEntity.getName()
+                            ,playersEntity.getIdPlayer().toString()
+                            ,teamEntity.getNameCategoryENG()
+                            ,teamEntity.getIdTeam().toString()))
+                    .build();
+
+        }catch (Exception var4){
+            return ChangePlayerInTheTeamDto
+                    .builder()
+                    .status(Status.Validation.FAILED)
+                    .message(var4.getMessage())
+                    .build();
+        }
+    }
 }

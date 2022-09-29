@@ -5,8 +5,6 @@ import com.example.footbalapp.dto.PlayerForTeamDto;
 import com.example.footbalapp.dto.TeamDto;
 import com.example.footbalapp.dto.functionDto.*;
 
-import java.util.*;
-
 public interface FootballService {
 
     GetPlayersOfTeam getPlayersOfTeam(Long idTeam);
@@ -17,8 +15,9 @@ public interface FootballService {
 
     AddTeamDto addTeam(TeamDto teamDto);
 
-    AddPlayerForTeamDto addPlayerForTeam(PlayerForTeamDto playerForTeamDto);
+    ChangePlayerInTheTeamDto addPlayerForTeam(PlayerForTeamDto playerForTeamDto);
 
     TeamsDto getTeams();
 
+    ChangePlayerInTheTeamDto deletePlayerOfTeam(PlayerForTeamDto playerForTeamDto);
 }

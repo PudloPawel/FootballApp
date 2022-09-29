@@ -8,10 +8,7 @@ import com.example.footbalapp.mapper.PlayersMapper;
 import com.example.footbalapp.mapper.PlayersTeamMapper;
 import com.example.footbalapp.mapper.TeamsMapper;
 import com.example.footbalapp.service.FootballService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class FootballServicelmpl implements FootballService {
@@ -47,12 +44,17 @@ public class FootballServicelmpl implements FootballService {
     }
 
     @Override
-    public AddPlayerForTeamDto addPlayerForTeam(PlayerForTeamDto playerForTeamDto) {
+    public ChangePlayerInTheTeamDto addPlayerForTeam(PlayerForTeamDto playerForTeamDto) {
         return this.playersTeamMapper.addPlayerForTeam(playerForTeamDto);
     }
 
     @Override
     public TeamsDto getTeams() {
         return this.teamsMapper.getTeams();
+    }
+
+    @Override
+    public ChangePlayerInTheTeamDto deletePlayerOfTeam(PlayerForTeamDto playerForTeamDto) {
+        return this.playersTeamMapper.deletePlayerOfTeam(playerForTeamDto);
     }
 }

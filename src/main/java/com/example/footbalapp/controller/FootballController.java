@@ -12,8 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
-
 @Controller
 @RequestMapping("/api")
 public class FootballController {
@@ -93,14 +91,27 @@ public class FootballController {
 
     @CrossOrigin("http://localhost:63342")
     @PostMapping("/addPlayerForTeam")
-    public ResponseEntity<AddPlayerForTeamDto> addPlayerForTeam(@RequestBody PlayerForTeamDto playerForTeamDto){
+    public ResponseEntity<ChangePlayerInTheTeamDto> addPlayerForTeam(@RequestBody PlayerForTeamDto playerForTeamDto){
 
-        AddPlayerForTeamDto addPlayerForTeamDto = this.footballService.addPlayerForTeam(playerForTeamDto);
+        ChangePlayerInTheTeamDto addPlayerForTeamDto = this.footballService.addPlayerForTeam(playerForTeamDto);
 
         if(addPlayerForTeamDto.getStatus().equals(Status.Validation.SUCCESSFUL)){
             return new ResponseEntity<>(addPlayerForTeamDto,HttpStatus.OK);
         }else{
             return new ResponseEntity<>(addPlayerForTeamDto,HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin("http://localhost:63342")
+    @PostMapping("/deletePlayerOfTeam")
+    public ResponseEntity<ChangePlayerInTheTeamDto> deletePlayerOfTeam(@RequestBody PlayerForTeamDto playerForTeamDto){
+
+        ChangePlayerInTheTeamDto deletePlayerOfTeamDto = this.footballService.deletePlayerOfTeam(playerForTeamDto);
+
+        if(deletePlayerOfTeamDto.getStatus().equals(Status.Validation.SUCCESSFUL)){
+            return new ResponseEntity<>(deletePlayerOfTeamDto,HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(deletePlayerOfTeamDto,HttpStatus.BAD_REQUEST);
         }
 
     }

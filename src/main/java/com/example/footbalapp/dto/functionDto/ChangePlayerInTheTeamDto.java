@@ -10,7 +10,7 @@ import lombok.Setter;
 @Builder
 @Getter
 @Setter
-public class AddPlayerForTeamDto {
+public class ChangePlayerInTheTeamDto {
 
     private PlayerForTeamDto playerForTeamDto;
     private Status.Validation status;
