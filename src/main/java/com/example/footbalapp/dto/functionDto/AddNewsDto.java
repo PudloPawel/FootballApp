@@ -1,18 +1,17 @@
 package com.example.footbalapp.dto.functionDto;
 
-import com.example.footbalapp.dto.PlayerDto;
+import com.example.footbalapp.dto.NewsDto;
 import com.example.footbalapp.dto.status.Status;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import java.util.*;
 
 @Builder
 @Getter
 @Setter
-public class GetPlayersOfTeam {
+public class AddNewsDto {
 
-    private List<PlayerDto> playerOfTeamDto;
+    private NewsDto newsDto;
     private Status.Validation status;
     private String message;
 
