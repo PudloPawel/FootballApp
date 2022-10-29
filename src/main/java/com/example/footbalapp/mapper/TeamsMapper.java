@@ -40,9 +40,11 @@ public class TeamsMapper {
             }
 
             this.teamsRepository.save(teamEntity);
+            Long idTeam = this.teamsRepository.getIdTeam(namePl,nameEng);
 
             return AddTeamDto
                     .builder()
+                    .idTeam(idTeam)
                     .teamDto(teamDto)
                     .status(Status.Validation.SUCCESSFUL)
                     .message("You add team")

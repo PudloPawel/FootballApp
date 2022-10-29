@@ -42,6 +42,7 @@ public class NewsMapper {
             NewsEntity checkData = this.newsRepository.checkDataInBase(topic,text,author);
 
             if(checkData != null){
+
                 return AddNewsDto
                         .builder()
                         .status(Status.Validation.FAILED)
@@ -59,8 +60,11 @@ public class NewsMapper {
                         .build();
             }
 
+            Long idNews = this.newsRepository.getIdNews(topic,text,author,date);
+
             return AddNewsDto
                     .builder()
+                    .idNews(idNews)
                     .newsDto(NewsDto.builder().topicNews(topic).text(text).author(author).dateNews(date).build())
                     .status(Status.Validation.SUCCESSFUL)
                     .message("Add post on DateBase")

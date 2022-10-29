@@ -11,6 +11,7 @@ import lombok.Setter;
 @Setter
 public class AddNewsDto {
 
+    private Long idNews;
     private NewsDto newsDto;
     private Status.Validation status;
     private String message;

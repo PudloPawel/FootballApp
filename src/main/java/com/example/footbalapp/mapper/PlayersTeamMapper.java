@@ -80,8 +80,13 @@ public class PlayersTeamMapper {
             playerOfTeamEntity.setPlayer(playersEntity);
             playerOfTeamEntity.setTeam(teamEntity);
             this.playerOfTeamRepository.save(playerOfTeamEntity);
+
+            playerOfTeamEntity = this.playerOfTeamRepository.findPlayerInTeam(idPlayer,idTeam);
+            Long idPlayerOfTeam = playerOfTeamEntity.getId();
+
             return ChangePlayerInTheTeamDto
                     .builder()
+                    .idPlayerInTeam(idPlayerOfTeam)
                     .playerForTeamDto(playerForTeamDto)
                     .status(Status.Validation.SUCCESSFUL)
                     .message(String.format("You add Player %s id: %s for Team: %s id: %s"
@@ -236,10 +241,13 @@ public class PlayersTeamMapper {
 
             PlayerOfTeamEntity playerOfTeamEntity = this.playerOfTeamRepository.findPlayerInTeam(idPlayer,idTeam);
 
+            Long idDeletePlayer = playerOfTeamEntity.getId();
+
             this.playerOfTeamRepository.delete(playerOfTeamEntity);
 
             return ChangePlayerInTheTeamDto
                     .builder()
+                    .idPlayerInTeam(idDeletePlayer)
                     .playerForTeamDto(playerForTeamDto)
                     .status(Status.Validation.SUCCESSFUL)
                     .message(String.format("You delete Player %s id: %s for Team: %s id: %s"
