@@ -11,6 +11,7 @@ import lombok.Setter;
 @Setter
 public class AddPlayerDto {
 
+    private Long idPlayer;
     private PlayerDto playerDto;
     private Status.Validation status;
     private String message;

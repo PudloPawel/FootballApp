@@ -104,7 +104,7 @@ public class FootballController {
     }
 
     @CrossOrigin("http://localhost:63342")
-    @PostMapping("/deletePlayerOfTeam")
+    @DeleteMapping("/deletePlayerOfTeam")
     public ResponseEntity<ChangePlayerInTheTeamDto> deletePlayerOfTeam(@RequestBody PlayerForTeamDto playerForTeamDto){
 
         ChangePlayerInTheTeamDto deletePlayerOfTeamDto = this.footballService.deletePlayerOfTeam(playerForTeamDto);

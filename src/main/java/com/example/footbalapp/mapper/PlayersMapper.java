@@ -62,8 +62,11 @@ public class PlayersMapper {
 
             this.playersRepository.save(playerEntity);
 
+            Long idPlayer = this.playersRepository.getIdPlayer(name,surname,dateOfBirth,position);
+
             return AddPlayerDto
                     .builder()
+                    .idPlayer(idPlayer)
                     .playerDto(playerDto)
                     .status(Status.Validation.SUCCESSFUL)
                     .message("You add player")

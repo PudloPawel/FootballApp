@@ -12,6 +12,7 @@ import lombok.Setter;
 @Setter
 public class AddTeamDto {
 
+    private Long idTeam;
     private TeamDto teamDto;
     private Status.Validation status;
     private String message;

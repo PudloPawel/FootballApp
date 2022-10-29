@@ -12,6 +12,7 @@ import lombok.Setter;
 @Setter
 public class ChangePlayerInTheTeamDto {
 
+    private Long idPlayerInTeam;
     private PlayerForTeamDto playerForTeamDto;
     private Status.Validation status;
     private String message;
