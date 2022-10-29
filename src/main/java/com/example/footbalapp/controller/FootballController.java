@@ -1,5 +1,6 @@
 package com.example.footbalapp.controller;
 
+import com.example.footbalapp.dto.NewsDto;
 import com.example.footbalapp.dto.PlayerDto;
 import com.example.footbalapp.dto.PlayerForTeamDto;
 import com.example.footbalapp.dto.TeamDto;
@@ -112,6 +113,20 @@ public class FootballController {
             return new ResponseEntity<>(deletePlayerOfTeamDto,HttpStatus.OK);
         }else{
             return new ResponseEntity<>(deletePlayerOfTeamDto,HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+    @CrossOrigin("http://localhost:63342")
+    @PostMapping("/addNews")
+    public ResponseEntity<AddNewsDto> addNews(@RequestBody NewsDto newsDto){
+
+        AddNewsDto addNewsDto = this.footballService.addNews(newsDto);
+
+        if(addNewsDto.getStatus().equals(Status.Validation.SUCCESSFUL)){
+            return new ResponseEntity<>(addNewsDto,HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(addNewsDto,HttpStatus.BAD_REQUEST);
         }
 
     }

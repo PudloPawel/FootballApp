@@ -1,5 +1,6 @@
 package com.example.footbalapp.service;
 
+import com.example.footbalapp.dto.NewsDto;
 import com.example.footbalapp.dto.PlayerDto;
 import com.example.footbalapp.dto.PlayerForTeamDto;
 import com.example.footbalapp.dto.TeamDto;
@@ -20,4 +21,6 @@ public interface FootballService {
     TeamsDto getTeams();
 
     ChangePlayerInTheTeamDto deletePlayerOfTeam(PlayerForTeamDto playerForTeamDto);
+
+    AddNewsDto addNews(NewsDto newsDto);
 }
