@@ -5,14 +5,14 @@ import com.example.footbalapp.dto.status.Status;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import java.util.*;
 
 @Builder
 @Getter
 @Setter
-public class AddPlayerDto {
+public class GetPlayersOfTeam {
 
-    private Long idPlayer;
-    private PlayerDto playerDto;
+    private List<PlayerDto> playerOfTeamDto;
     private Status.Validation status;
     private String message;
 
