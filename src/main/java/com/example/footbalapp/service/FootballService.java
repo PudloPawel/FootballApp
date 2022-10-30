@@ -23,4 +23,10 @@ public interface FootballService {
     ChangePlayerInTheTeamDto deletePlayerOfTeam(PlayerForTeamDto playerForTeamDto);
 
     AddNewsDto addNews(NewsDto newsDto);
+
+    AddNewsDto editNews(NewsDto newsDto, Long idNews);
+
+    AddNewsDto deleteNews(Long idNews);
+
+    AddNewsDto getNews(Long idNews);
 }

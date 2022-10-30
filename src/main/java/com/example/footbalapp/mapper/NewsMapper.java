@@ -8,6 +8,8 @@ import com.example.footbalapp.repository.NewsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class NewsMapper {
 
@@ -19,6 +21,110 @@ public class NewsMapper {
     }
 
     public AddNewsDto addNews(NewsDto newsDto) {
+
+        return addNewsForDataBase(newsDto);
+
+    }
+
+    public AddNewsDto editNews(NewsDto newsDto, Long idNews) {
+
+        AddNewsDto addNewsDto = deleteNewsForDataBase(idNews);
+
+        if(addNewsDto.getStatus() == Status.Validation.FAILED){
+            addNewsDto.setMessage(String.format("You don't edit news id: %s because news not exist",idNews));
+        }else{
+            addNewsDto = addNewsForDataBase(newsDto);
+            if(addNewsDto.getStatus() == Status.Validation.FAILED){
+                addNewsDto.setMessage(String.format("You don't edit news id: %s",idNews));
+            }else{
+                addNewsDto.setMessage(String.format("You edit news id: %s",idNews));
+            }
+        }
+        return addNewsDto;
+
+    }
+
+    public AddNewsDto deleteNews(Long idNews){
+
+        return deleteNewsForDataBase(idNews);
+
+    }
+
+    public AddNewsDto getNews(Long idNews) {
+
+        try{
+
+            Optional<NewsEntity> newsEntity = this.newsRepository.findById(idNews);
+
+            String message;
+            Status.Validation status;
+            NewsDto newsDto = null;
+
+            if(newsEntity.isPresent()){
+                status = Status.Validation.SUCCESSFUL;
+                message = "You returned the news";
+                newsDto = NewsDto.builder()
+                        .topicNews(newsEntity.get().getTopicNews())
+                        .text(newsEntity.get().getText())
+                        .dateNews(newsEntity.get().getDate())
+                        .author(newsEntity.get().getAuthor())
+                        .build();
+            }else{
+                status = Status.Validation.FAILED;
+                message = "You not returned the news";
+                newsDto = NewsDto.builder().build();
+            }
+
+            return AddNewsDto
+                    .builder()
+                    .idNews(idNews)
+                    .newsDto(newsDto)
+                    .status(status)
+                    .message(message)
+                    .build();
+
+        }catch (Exception var4){
+            return AddNewsDto
+                    .builder()
+                    .status(Status.Validation.FAILED)
+                    .message(var4.getMessage())
+                    .build();
+        }
+    }
+
+    private AddNewsDto deleteNewsForDataBase(Long idNews){
+        try{
+
+            Optional<NewsEntity> newsEntity = this.newsRepository.findById(idNews);
+
+            if(!newsEntity.isPresent()){
+                return AddNewsDto
+                        .builder()
+                        .idNews(idNews)
+                        .status(Status.Validation.FAILED)
+                        .message(String.format("News id: %s not exist",idNews))
+                        .build();
+            }else{
+                this.newsRepository.delete(newsEntity.get());
+            }
+
+            return AddNewsDto
+                    .builder()
+                    .idNews(idNews)
+                    .status(Status.Validation.SUCCESSFUL)
+                    .message(String.format("You delete news id: %s",idNews))
+                    .build();
+
+        }catch (Exception var4){
+            return AddNewsDto
+                    .builder()
+                    .status(Status.Validation.FAILED)
+                    .message(var4.getMessage())
+                    .build();
+        }
+    }
+
+    private AddNewsDto addNewsForDataBase(NewsDto newsDto){
 
         try {
 
@@ -33,7 +139,7 @@ public class NewsMapper {
                     .build();
 
             if(topic.equals("") || author.equals("") || date.equals("")){
-               return AddNewsDto.builder()
+                return AddNewsDto.builder()
                         .status(Status.Validation.FAILED)
                         .message(String.format("Please send full model Dto. Send data: Topic: %s Author: %s Date: %s",topic,author,date))
                         .build();
@@ -81,4 +187,6 @@ public class NewsMapper {
         }
 
     }
+
+
 }

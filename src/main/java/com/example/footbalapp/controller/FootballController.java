@@ -131,4 +131,42 @@ public class FootballController {
 
     }
 
+    @CrossOrigin("http://localhost:63342")
+    @PutMapping("/editNews/{idNews}")
+    public ResponseEntity<AddNewsDto> editNews(@RequestBody NewsDto newsDto, @PathVariable(value = "idNews") Long idNews ){
+
+        AddNewsDto editNewsDto = this.footballService.editNews(newsDto,idNews);
+
+        if(editNewsDto.getStatus().equals(Status.Validation.SUCCESSFUL)){
+            return new ResponseEntity<>(editNewsDto,HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(editNewsDto,HttpStatus.NO_CONTENT);
+        }
+
+    }
+
+    @CrossOrigin("http://localhost:63342")
+    @DeleteMapping("/deleteNews/{idNews}")
+    public ResponseEntity<AddNewsDto> deleteNews(@PathVariable(value = "idNews") Long idNews ){
+        AddNewsDto deleteNewsDto = this.footballService.deleteNews(idNews);
+
+        if(deleteNewsDto.getStatus().equals(Status.Validation.SUCCESSFUL)){
+            return new ResponseEntity<>(deleteNewsDto,HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(deleteNewsDto,HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin("http://localhost:63342")
+    @GetMapping("/getNews/{idNews}")
+    public ResponseEntity<AddNewsDto> getNews(@PathVariable(value = "idNews") Long idNews){
+        AddNewsDto getNewsDto = this.footballService.getNews(idNews);
+
+        if(getNewsDto.getStatus().equals(Status.Validation.SUCCESSFUL)){
+            return new ResponseEntity<>(getNewsDto,HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(getNewsDto,HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }
