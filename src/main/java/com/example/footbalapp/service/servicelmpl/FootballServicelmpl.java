@@ -9,7 +9,6 @@ import com.example.footbalapp.mapper.NewsMapper;
 import com.example.footbalapp.mapper.PlayersMapper;
 import com.example.footbalapp.mapper.PlayersTeamMapper;
 import com.example.footbalapp.mapper.TeamsMapper;
-import com.example.footbalapp.repository.NewsRepository;
 import com.example.footbalapp.service.FootballService;
 import org.springframework.stereotype.Service;
 
@@ -69,5 +68,20 @@ public class FootballServicelmpl implements FootballService {
     @Override
     public AddNewsDto addNews(NewsDto newsDto) {
         return this.newsMapper.addNews(newsDto);
+    }
+
+    @Override
+    public AddNewsDto editNews(NewsDto newsDto, Long idNews) {
+        return this.newsMapper.editNews(newsDto,idNews);
+    }
+
+    @Override
+    public AddNewsDto deleteNews(Long idNews) {
+        return this.newsMapper.deleteNews(idNews);
+    }
+
+    @Override
+    public AddNewsDto getNews(Long idNews) {
+        return this.newsMapper.getNews(idNews);
     }
 }
