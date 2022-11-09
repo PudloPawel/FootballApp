@@ -38,6 +38,20 @@ public class FootballController {
     }
 
     @CrossOrigin("http://localhost:63342")
+    @GetMapping("/getPlayersByPosition/{idTeam}")
+    public ResponseEntity<GetPlayersOfTeam> getPlayersOfTeamByPosition(@PathVariable(value = "idTeam") Long idTeam){
+
+        GetPlayersOfTeam getPlayersOfTeamByPosition = footballService.getPlayersOfTeamByPosition(idTeam);
+
+        if(getPlayersOfTeamByPosition.getStatus().equals(Status.Validation.SUCCESSFUL)){
+            return new ResponseEntity<>(getPlayersOfTeamByPosition, HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(getPlayersOfTeamByPosition,HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+    @CrossOrigin("http://localhost:63342")
     @GetMapping("/getPlayer")
     public ResponseEntity<GetPlayerInformation> getPlayerOfTeam(@RequestBody PlayerForTeamDto playerForTeamDto){
 
@@ -119,23 +133,23 @@ public class FootballController {
 
     @CrossOrigin("http://localhost:63342")
     @PostMapping("/addNews")
-    public ResponseEntity<AddNewsDto> addNews(@RequestBody NewsDto newsDto){
+    public ResponseEntity<NewsModelDto> addNews(@RequestBody NewsDto newsDto){
 
-        AddNewsDto addNewsDto = this.footballService.addNews(newsDto);
+        NewsModelDto newsModelDto = this.footballService.addNews(newsDto);
 
-        if(addNewsDto.getStatus().equals(Status.Validation.SUCCESSFUL)){
-            return new ResponseEntity<>(addNewsDto,HttpStatus.OK);
+        if(newsModelDto.getStatus().equals(Status.Validation.SUCCESSFUL)){
+            return new ResponseEntity<>(newsModelDto,HttpStatus.OK);
         }else{
-            return new ResponseEntity<>(addNewsDto,HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(newsModelDto,HttpStatus.BAD_REQUEST);
         }
 
     }
 
     @CrossOrigin("http://localhost:63342")
     @PutMapping("/editNews/{idNews}")
-    public ResponseEntity<AddNewsDto> editNews(@RequestBody NewsDto newsDto, @PathVariable(value = "idNews") Long idNews ){
+    public ResponseEntity<NewsModelDto> editNews(@RequestBody NewsDto newsDto, @PathVariable(value = "idNews") Long idNews ){
 
-        AddNewsDto editNewsDto = this.footballService.editNews(newsDto,idNews);
+        NewsModelDto editNewsDto = this.footballService.editNews(newsDto,idNews);
 
         if(editNewsDto.getStatus().equals(Status.Validation.SUCCESSFUL)){
             return new ResponseEntity<>(editNewsDto,HttpStatus.OK);
@@ -147,8 +161,8 @@ public class FootballController {
 
     @CrossOrigin("http://localhost:63342")
     @DeleteMapping("/deleteNews/{idNews}")
-    public ResponseEntity<AddNewsDto> deleteNews(@PathVariable(value = "idNews") Long idNews ){
-        AddNewsDto deleteNewsDto = this.footballService.deleteNews(idNews);
+    public ResponseEntity<NewsModelDto> deleteNews(@PathVariable(value = "idNews") Long idNews ){
+        NewsModelDto deleteNewsDto = this.footballService.deleteNews(idNews);
 
         if(deleteNewsDto.getStatus().equals(Status.Validation.SUCCESSFUL)){
             return new ResponseEntity<>(deleteNewsDto,HttpStatus.OK);
@@ -158,9 +172,21 @@ public class FootballController {
     }
 
     @CrossOrigin("http://localhost:63342")
-    @GetMapping("/getNews/{idNews}")
-    public ResponseEntity<AddNewsDto> getNews(@PathVariable(value = "idNews") Long idNews){
-        AddNewsDto getNewsDto = this.footballService.getNews(idNews);
+    @GetMapping("/getOneNews/{idNews}")
+    public ResponseEntity<NewsModelDto> getOneNews(@PathVariable(value = "idNews") Long idNews){
+        NewsModelDto getNewsDto = this.footballService.getNews(idNews);
+
+        if(getNewsDto.getStatus().equals(Status.Validation.SUCCESSFUL)){
+            return new ResponseEntity<>(getNewsDto,HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(getNewsDto,HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin("http://localhost:63342")
+    @GetMapping("/getNews")
+    public ResponseEntity<GetNewsDto> getAllNews(){
+        GetNewsDto getNewsDto = this.footballService.getAllNews();
 
         if(getNewsDto.getStatus().equals(Status.Validation.SUCCESSFUL)){
             return new ResponseEntity<>(getNewsDto,HttpStatus.OK);

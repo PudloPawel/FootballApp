@@ -22,11 +22,15 @@ public interface FootballService {
 
     ChangePlayerInTheTeamDto deletePlayerOfTeam(PlayerForTeamDto playerForTeamDto);
 
-    AddNewsDto addNews(NewsDto newsDto);
+    NewsModelDto addNews(NewsDto newsDto);
 
-    AddNewsDto editNews(NewsDto newsDto, Long idNews);
+    NewsModelDto editNews(NewsDto newsDto, Long idNews);
 
-    AddNewsDto deleteNews(Long idNews);
+    NewsModelDto deleteNews(Long idNews);
 
-    AddNewsDto getNews(Long idNews);
+    NewsModelDto getNews(Long idNews);
+
+    GetNewsDto getAllNews();
+
+    GetPlayersOfTeam getPlayersOfTeamByPosition(Long idTeam);
 }

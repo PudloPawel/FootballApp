@@ -66,22 +66,32 @@ public class FootballServicelmpl implements FootballService {
     }
 
     @Override
-    public AddNewsDto addNews(NewsDto newsDto) {
+    public NewsModelDto addNews(NewsDto newsDto) {
         return this.newsMapper.addNews(newsDto);
     }
 
     @Override
-    public AddNewsDto editNews(NewsDto newsDto, Long idNews) {
+    public NewsModelDto editNews(NewsDto newsDto, Long idNews) {
         return this.newsMapper.editNews(newsDto,idNews);
     }
 
     @Override
-    public AddNewsDto deleteNews(Long idNews) {
+    public NewsModelDto deleteNews(Long idNews) {
         return this.newsMapper.deleteNews(idNews);
     }
 
     @Override
-    public AddNewsDto getNews(Long idNews) {
+    public NewsModelDto getNews(Long idNews) {
         return this.newsMapper.getNews(idNews);
+    }
+
+    @Override
+    public GetNewsDto getAllNews() {
+        return this.newsMapper.getAllNews();
+    }
+
+    @Override
+    public GetPlayersOfTeam getPlayersOfTeamByPosition(Long idTeam) {
+        return this.playersTeamMapper.getPlayersOfTeamByPosition(idTeam);
     }
 }
