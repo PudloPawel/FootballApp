@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Builder
-public class PlayerDto {
+public class PlayerDto implements Comparable<PlayerDto> {
 
     private String name;
     private String surname;
@@ -21,5 +21,10 @@ public class PlayerDto {
         this.surname = surname;
         this.dateOfBirth = dateOfBirth;
         this.position = position;
+    }
+
+    @Override
+    public int compareTo(PlayerDto o) {
+        return this.position.compareTo(o.position);
     }
 }

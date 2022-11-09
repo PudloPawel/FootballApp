@@ -1,5 +1,6 @@
 package com.example.footbalapp.mapper;
 
+
 import com.example.footbalapp.dto.PlayerDto;
 import com.example.footbalapp.dto.PlayerForTeamDto;
 import com.example.footbalapp.dto.TeamDto;
@@ -18,6 +19,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.thymeleaf.util.ListUtils.sort;
 
 @Component
 public class PlayersTeamMapper {
@@ -264,5 +267,20 @@ public class PlayersTeamMapper {
                     .message(var4.getMessage())
                     .build();
         }
+    }
+
+    public GetPlayersOfTeam getPlayersOfTeamByPosition(Long idTeam) {
+
+            GetPlayersOfTeam getPlayersOfTeam = getPlayersOfTeam(idTeam);
+
+            if(getPlayersOfTeam.getStatus() == Status.Validation.FAILED){
+                return getPlayersOfTeam;
+            }else{
+                List<PlayerDto> playersOfTeam = getPlayersOfTeam.getPlayerOfTeamDto();
+                getPlayersOfTeam.setPlayerOfTeamDto(sort(playersOfTeam));
+                return getPlayersOfTeam;
+
+            }
+
     }
 }

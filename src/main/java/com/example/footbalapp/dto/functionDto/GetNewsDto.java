@@ -6,14 +6,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Builder
 @Getter
 @Setter
-public class AddNewsDto {
+public class GetNewsDto {
 
-    private Long idNews;
-    private NewsDto newsDto;
+
+    private List<NewsDto> newsDto;
     private Status.Validation status;
     private String message;
-
 }
