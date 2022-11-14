@@ -14,8 +14,4 @@ public class TeamDto {
     private String nameTeamPl;
     private String nameTeamEng;
 
-    public TeamDto(String nameTeamPl, String nameTeamEng) {
-        this.nameTeamPl = nameTeamPl;
-        this.nameTeamEng = nameTeamEng;
-    }
 }

@@ -16,10 +16,4 @@ public class NewsDto {
     private String dateNews;
     private String author;
 
-    public NewsDto(String topicNews, String text, String dateNews, String author) {
-        this.topicNews = topicNews;
-        this.text = text;
-        this.dateNews = dateNews;
-        this.author = author;
-    }
 }
