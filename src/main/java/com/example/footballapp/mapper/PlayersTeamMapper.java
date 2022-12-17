@@ -1,0 +1,286 @@
+package com.example.footballapp.mapper;
+
+
+import com.example.footballapp.models.PlayerDto;
+import com.example.footballapp.models.PlayerForTeamDto;
+import com.example.footballapp.models.TeamDto;
+import com.example.footballapp.models.functionDto.ChangePlayerInTheTeamDto;
+import com.example.footballapp.models.user.function.GetPlayerInformation;
+import com.example.footballapp.models.functionDto.GetPlayersOfTeam;
+import com.example.footballapp.models.status.Status;
+import com.example.footballapp.entity.PlayerOfTeamEntity;
+import com.example.footballapp.entity.PlayersEntity;
+import com.example.footballapp.entity.TeamsEntity;
+import com.example.footballapp.repository.PlayerOfTeamRepository;
+import com.example.footballapp.repository.PlayersRepository;
+import com.example.footballapp.repository.TeamsRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.thymeleaf.util.ListUtils.sort;
+
+@Component
+public class PlayersTeamMapper {
+
+    private final PlayersRepository playersRepository;
+    private final TeamsRepository teamsRepository;
+    private final PlayerOfTeamRepository playerOfTeamRepository;
+
+    @Autowired
+    public PlayersTeamMapper(PlayersRepository playersRepository,
+                             TeamsRepository teamsRepository,
+                             PlayerOfTeamRepository playerOfTeamRepository) {
+        this.playersRepository = playersRepository;
+        this.teamsRepository = teamsRepository;
+        this.playerOfTeamRepository = playerOfTeamRepository;
+    }
+
+    public ChangePlayerInTheTeamDto addPlayerForTeam(PlayerForTeamDto playerForTeamDto){
+
+        Long idPlayer = playerForTeamDto.getIdPlayer();
+        Long idTeam = playerForTeamDto.getIdTeam();
+
+        try{
+
+            PlayersEntity playersEntity = this.playersRepository.findPlayer(idPlayer);
+            TeamsEntity teamEntity = this.teamsRepository.findTeam(idTeam);
+
+
+            if(playersEntity == null && teamEntity == null){
+                return ChangePlayerInTheTeamDto
+                        .builder()
+                        .status(Status.Validation.FAILED)
+                        .message(String.format("Not found player with id: %s and Not found team with id: %s",idPlayer,idTeam))
+                        .build();
+            }else if(playersEntity == null){
+                return ChangePlayerInTheTeamDto
+                        .builder()
+                        .status(Status.Validation.FAILED)
+                        .message(String.format("Not found team with id: %s",idTeam))
+                        .build();
+            }else if(teamEntity == null){
+                return ChangePlayerInTheTeamDto
+                        .builder()
+                        .status(Status.Validation.FAILED)
+                        .message(String.format("Not found player with id: %s",idPlayer))
+                        .build();
+            }
+            PlayerOfTeamEntity playerOfTeamEntity = new PlayerOfTeamEntity();
+
+            try{
+                PlayerOfTeamEntity checkNullEntity = playerOfTeamRepository.findPlayerInTeam(idPlayer,idTeam);
+                checkNullEntity.equals(checkNullEntity);
+                return ChangePlayerInTheTeamDto
+                        .builder()
+                        .status(Status.Validation.FAILED)
+                        .message(String.format("Player id: %s is exist in team id: %s",idPlayer,idTeam))
+                        .build();
+            }catch (Exception ignored){}
+
+            playerOfTeamEntity.setPlayer(playersEntity);
+            playerOfTeamEntity.setTeam(teamEntity);
+            this.playerOfTeamRepository.save(playerOfTeamEntity);
+
+            playerOfTeamEntity = this.playerOfTeamRepository.findPlayerInTeam(idPlayer,idTeam);
+            Long idPlayerOfTeam = playerOfTeamEntity.getId();
+
+            return ChangePlayerInTheTeamDto
+                    .builder()
+                    .idPlayerInTeam(idPlayerOfTeam)
+                    .playerForTeamDto(playerForTeamDto)
+                    .status(Status.Validation.SUCCESSFUL)
+                    .message(String.format("You add Player %s id: %s for Team: %s id: %s"
+                            ,playersEntity.getName()
+                            ,playersEntity.getIdPlayer().toString()
+                            ,teamEntity.getNameCategoryENG()
+                            ,teamEntity.getIdTeam().toString()))
+                    .build();
+
+        }catch (Exception var4){
+            return ChangePlayerInTheTeamDto
+                    .builder()
+                    .status(Status.Validation.FAILED)
+                    .message(var4.getMessage())
+                    .build();
+        }
+    }
+
+    public GetPlayersOfTeam getPlayersOfTeam(Long idTeam) {
+        try{
+
+            List<PlayerDto> playersOfTeamDto = new ArrayList();
+
+            List<PlayersEntity> playersIdList = playerOfTeamRepository.getAllPlayerOfTeam(idTeam);
+
+            if(playersIdList == null){
+                return GetPlayersOfTeam
+                        .builder()
+                        .status(Status.Validation.FAILED)
+                        .message(String.format("Don't find player in Team id: %s or Team does not exist",idTeam))
+                        .build();
+            }
+
+
+
+            for (PlayersEntity player: playersIdList) {
+                playersOfTeamDto.add(PlayerDto
+                        .builder()
+                        .name(player.getName())
+                        .surname(player.getSurname())
+                        .dateOfBirth(player.getDateOfBirth())
+                        .position(player.getPosition())
+                .build());
+            }
+
+            if(playersOfTeamDto.size() == 0){
+                return GetPlayersOfTeam
+                        .builder()
+                        .status(Status.Validation.FAILED)
+                        .message(String.format("Don't find player in Team id: %s",idTeam))
+                        .build();
+            }else{
+                return GetPlayersOfTeam
+                        .builder()
+                        .playerOfTeamDto(playersOfTeamDto)
+                        .status(Status.Validation.SUCCESSFUL)
+                        .message(String.format("You get Players of Team id: %s",idTeam))
+                        .build();
+            }
+
+
+        }catch (Exception var4){
+            return GetPlayersOfTeam
+                    .builder()
+                    .status(Status.Validation.FAILED)
+                    .message(var4.getMessage())
+                    .build();
+        }
+    }
+
+    public GetPlayerInformation getInformationPlayerOfTeam(PlayerForTeamDto playerForTeamDto){
+        try{
+
+            PlayerDto playerInformation;
+            TeamDto teamInformation;
+
+            Long idPlayer = playerForTeamDto.getIdPlayer();
+            Long idTeam = playerForTeamDto.getIdTeam();
+
+
+            PlayerOfTeamEntity playerOfTeamEntity = playerOfTeamRepository.findPlayerInTeam(idPlayer,idTeam);
+
+            if(playerOfTeamEntity == null){
+                return GetPlayerInformation
+                        .builder()
+                        .status(Status.Validation.FAILED)
+                        .message(String.format("Player id: %s or Team id: %s does not exist ",idPlayer,idTeam))
+                        .build();
+            }else{
+                playerInformation = PlayerDto
+                        .builder()
+                        .name(playerOfTeamEntity.getPlayersEntity().getName())
+                        .surname(playerOfTeamEntity.getPlayersEntity().getSurname())
+                        .dateOfBirth(playerOfTeamEntity.getPlayersEntity().getDateOfBirth())
+                        .position(playerOfTeamEntity.getPlayersEntity().getPosition())
+                        .build() ;
+                teamInformation = TeamDto
+                        .builder()
+                        .nameTeamPl(playerOfTeamEntity.getTeamsEntity().getNameCategoryPl())
+                        .nameTeamEng(playerOfTeamEntity.getTeamsEntity().getNameCategoryENG())
+                        .build();
+
+                return GetPlayerInformation
+                        .builder()
+                        .playerInformation(playerInformation)
+                        .teamInformation(teamInformation)
+                        .status(Status.Validation.SUCCESSFUL)
+                        .message(String.format("Get information about player id: %s of Team id: %s ",idPlayer,idTeam))
+                        .build();
+            }
+
+
+        }catch (Exception var4){
+            return GetPlayerInformation
+                    .builder()
+                    .status(Status.Validation.FAILED)
+                    .message(var4.getMessage())
+                    .build();
+        }
+    }
+
+    public ChangePlayerInTheTeamDto deletePlayerOfTeam(PlayerForTeamDto playerForTeamDto) {
+
+        Long idPlayer = playerForTeamDto.getIdPlayer();
+        Long idTeam = playerForTeamDto.getIdTeam();
+
+        try{
+
+            PlayersEntity playersEntity = this.playersRepository.findPlayer(idPlayer);
+            TeamsEntity teamEntity = this.teamsRepository.findTeam(idTeam);
+
+
+            if(playersEntity == null && teamEntity == null){
+                return ChangePlayerInTheTeamDto
+                        .builder()
+                        .status(Status.Validation.FAILED)
+                        .message(String.format("Not found player with id: %s and Not found team with id: %s",idPlayer,idTeam))
+                        .build();
+            }else if(playersEntity == null){
+                return ChangePlayerInTheTeamDto
+                        .builder()
+                        .status(Status.Validation.FAILED)
+                        .message(String.format("Not found team with id: %s",idTeam))
+                        .build();
+            }else if(teamEntity == null){
+                return ChangePlayerInTheTeamDto
+                        .builder()
+                        .status(Status.Validation.FAILED)
+                        .message(String.format("Not found player with id: %s",idPlayer))
+                        .build();
+            }
+
+            PlayerOfTeamEntity playerOfTeamEntity = this.playerOfTeamRepository.findPlayerInTeam(idPlayer,idTeam);
+
+            Long idDeletePlayer = playerOfTeamEntity.getId();
+
+            this.playerOfTeamRepository.delete(playerOfTeamEntity);
+
+            return ChangePlayerInTheTeamDto
+                    .builder()
+                    .idPlayerInTeam(idDeletePlayer)
+                    .playerForTeamDto(playerForTeamDto)
+                    .status(Status.Validation.SUCCESSFUL)
+                    .message(String.format("You delete Player %s id: %s for Team: %s id: %s"
+                            ,playersEntity.getName()
+                            ,playersEntity.getIdPlayer().toString()
+                            ,teamEntity.getNameCategoryENG()
+                            ,teamEntity.getIdTeam().toString()))
+                    .build();
+
+        }catch (Exception var4){
+            return ChangePlayerInTheTeamDto
+                    .builder()
+                    .status(Status.Validation.FAILED)
+                    .message(var4.getMessage())
+                    .build();
+        }
+    }
+
+    public GetPlayersOfTeam getPlayersOfTeamByPosition(Long idTeam) {
+
+            GetPlayersOfTeam getPlayersOfTeam = getPlayersOfTeam(idTeam);
+
+            if(getPlayersOfTeam.getStatus() == Status.Validation.FAILED){
+                return getPlayersOfTeam;
+            }else{
+                List<PlayerDto> playersOfTeam = getPlayersOfTeam.getPlayerOfTeamDto();
+                getPlayersOfTeam.setPlayerOfTeamDto(sort(playersOfTeam));
+                return getPlayersOfTeam;
+
+            }
+
+    }
+}
